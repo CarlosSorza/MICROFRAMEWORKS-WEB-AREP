@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Searcher of films</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          text-align: center;
+          margin-top: 50px;
+        }
+        h1 {
+          color: #333;
+        }
+        input[type="text"] {
+          width: 300px;
+          padding: 10px;
+          font-size: 16px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+          outline: none;
+        }
+        button[type="submit"] {
+          background-color: #007bff;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          font-size: 16px;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+        button[type="submit"]:hover {
+          background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>Searcher of films</h1>
+<form action="/search" method="get">
+    <input type="text" name="q" placeholder="Search a film...">
+    <br><br>
+    <button type="button" onclick="searchFilm()">Search (GET)</button>
+</form>
+<form action="/search" method="post">
+    <input type="text" id="postInput" placeholder="Post a film...">
+    <br><br>
+    <button type="button" onclick="postFilm()">Post (POST)</button>
+</form>
+<h1 id="film">Film</h1>
+<script>
+    function searchFilm() {
+      var input = document.querySelector('input[name="q"]');
+      var filmTitle = input.value.replace(/ /g, "+");
+      var url = "http://localhost:35000/films?film=" + filmTitle;
+      fetch(url)
+        .then(response => response.text())
+        .then(data => (document.getElementById("film").innerHTML = data))
+        .catch(error => console.error('Error:', error));
+    }
+
+    function postFilm() {
+      var input = document.querySelector('#postInput');
+      var filmTitle = input.value.replace(/ /g, "+");
+      var url = "http://localhost:35000/films"; // Cambia la URL según tus necesidades
+      var formData = new FormData();
+      formData.append("film", filmTitle);
+
+      fetch(url, {
+        method: "POST",
+        body: formData
+      })
+        .then(response => response.text())
+        .then(data => (document.getElementById("film").innerHTML = data))
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>
